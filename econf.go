@@ -16,7 +16,7 @@ var (
 	err error
 )
 
-func configure() error {
+func load() error {
 	// if CONSUL_HTTP_ADDR is not found in env we only load config as filepath
 	if os.Getenv("CONSUL_HTTP_ADDR") == "" {
 		vip.AddConfigPath(GetEnv("ECONF_FILEPATH", "."))
@@ -55,7 +55,7 @@ func configure() error {
 	return viper.ReadRemoteConfig()
 }
 
-func init() {
+func Configure() {
 	if err := godotenv.Load(); err != nil {
 		logrus.Warnf("unable to load .env file : %s", err.Error())
 	}
@@ -65,7 +65,7 @@ func init() {
 	vip.SetConfigType(GetEnv("ECONF_FILETYPE", "yaml"))
 	vip.AutomaticEnv()
 
-	err = configure()
+	err = load()
 
 	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
